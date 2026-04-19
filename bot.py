@@ -23,23 +23,22 @@ async def on_member_join(member):
     if not channel:
         return
 
-    await asyncio.sleep(1)
-
-    invites_after = await member.guild.invites()
+    old_cache = bot.invite_cache.copy()
     
-    # Отладка
-    print(f"Кэш до: {bot.invite_cache}")
-    print(f"Инвайты после: {[(inv.code, inv.uses) for inv in invites_after]}")
+    await asyncio.sleep(3)
+    
+    invites_after = await member.guild.invites()
+    bot.invite_cache = {inv.code: inv.uses for inv in invites_after}
 
     used_invite = None
-
     for invite in invites_after:
-        if invite.code in bot.invite_cache:
-            if invite.uses > bot.invite_cache[invite.code]:
+        if invite.code in old_cache:
+            if invite.uses > old_cache[invite.code]:
                 used_invite = invite
                 break
 
-    bot.invite_cache = {inv.code: inv.uses for inv in invites_after}
+    print(f"Старый кэш: {old_cache}")
+    print(f"Новый кэш: {bot.invite_cache}")
 
     if used_invite:
         invite_info = f"`{used_invite.code}`"

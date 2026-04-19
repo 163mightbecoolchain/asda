@@ -36,12 +36,6 @@ async def on_member_join(member):
             if invite.uses > old_cache[invite.code]:
                 used_invite = invite
                 break
-                used_invite = None
-for invite in invites_after:
-    if invite.code in old_cache:
-        if invite.uses > old_cache[invite.code]:
-            used_invite = invite
-            break
 
 # Проверяем удалённые инвайты (одноразовые)
 if not used_invite:

@@ -5,7 +5,7 @@ import asyncio
 import os
  
 TOKEN = os.getenv("TOKEN")
-LOG_CHANNEL_ID = 0  # Замени на ID своего лог-канала
+LOG_CHANNEL_ID = 1227113471213043732  # Замени на ID своего лог-канала
  
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)

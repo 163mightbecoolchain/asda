@@ -16,11 +16,16 @@ def get_time():
     return datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
 # ─── ВХОД НА СЕРВЕР ───────────────────────────────────────────
+import asyncio
+
 @bot.event
 async def on_member_join(member):
     channel = await get_log_channel(member.guild)
     if not channel:
         return
+
+    # Ждём секунду чтобы Discord обновил данные
+    await asyncio.sleep(1)
 
     invites_after = await member.guild.invites()
     used_invite = None
@@ -33,7 +38,6 @@ async def on_member_join(member):
 
     bot.invite_cache = {inv.code: inv.uses for inv in invites_after}
 
-    # Информация об инвайте
     if used_invite:
         invite_info = f"`{used_invite.code}`"
         inviter_info = f"{used_invite.inviter.mention} (`{used_invite.inviter.name}`)"
@@ -50,9 +54,10 @@ async def on_member_join(member):
     embed.add_field(name="ID", value=member.id, inline=True)
     embed.add_field(name="Аккаунт создан", value=member.created_at.strftime("%d.%m.%Y"), inline=True)
     embed.add_field(name="Инвайт", value=invite_info, inline=True)
-    embed.add_field(name="Пригласил", value=inviter_info, inline=True)  # ← вот это добавил
+    embed.add_field(name="Пригласил", value=inviter_info, inline=True)
     embed.set_thumbnail(url=member.display_avatar.url)
     await channel.send(embed=embed)
+    
 
 # ─── ВЫХОД С СЕРВЕРА ──────────────────────────────────────────
 @bot.event
@@ -269,13 +274,13 @@ async def on_invite_delete(invite):
 @bot.event
 async def on_ready():
     print(f"Бот запущен: {bot.user}")
-    # Кэшируем все инвайты при старте
     bot.invite_cache = {}
     for guild in bot.guilds:
         try:
             invites = await guild.invites()
             bot.invite_cache = {inv.code: inv.uses for inv in invites}
-        except:
-            pass
+            print(f"Кэш инвайтов загружен: {len(bot.invite_cache)} инвайтов")
+        except Exception as e:
+            print(f"Ошибка загрузки инвайтов: {e}")
 
 bot.run(TOKEN)

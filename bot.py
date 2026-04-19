@@ -16,18 +16,20 @@ def get_time():
     return datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
 
 # ─── ВХОД НА СЕРВЕР ───────────────────────────────────────────
-import asyncio
-
 @bot.event
 async def on_member_join(member):
     channel = await get_log_channel(member.guild)
     if not channel:
         return
 
-    # Ждём секунду чтобы Discord обновил данные
     await asyncio.sleep(1)
 
     invites_after = await member.guild.invites()
+    
+    # Отладка
+    print(f"Кэш до: {bot.invite_cache}")
+    print(f"Инвайты после: {[(inv.code, inv.uses) for inv in invites_after]}")
+
     used_invite = None
 
     for invite in invites_after:

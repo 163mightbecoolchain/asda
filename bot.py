@@ -74,8 +74,8 @@ if not used_invite:
 # ─── ВЫХОД С СЕРВЕРА ──────────────────────────────────────────
 @bot.event
 async def on_member_remove(member):
-    channel = await get_log_channel(member.guild) 
-            await channel.send(embed=embed)
+    channel = await get_log_channel(member.guild) await channel.send(embed=embed)
+           
     if not channel:
         return
 

@@ -4,7 +4,7 @@ import datetime
 
 import os
 TOKEN = os.getenv("TOKEN")
-LOG_CHANNEL_ID = 123456789  # ID канала для логов
+LOG_CHANNEL_ID = 1227113471213043732  # ID канала для логов
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)

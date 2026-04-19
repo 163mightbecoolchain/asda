@@ -36,6 +36,22 @@ async def on_member_join(member):
             if invite.uses > old_cache[invite.code]:
                 used_invite = invite
                 break
+                used_invite = None
+for invite in invites_after:
+    if invite.code in old_cache:
+        if invite.uses > old_cache[invite.code]:
+            used_invite = invite
+            break
+
+# Проверяем удалённые инвайты (одноразовые)
+if not used_invite:
+    deleted_codes = set(old_cache.keys()) - set(bot.invite_cache.keys())
+    for code in deleted_codes:
+        if old_cache[code] == 0:  # была 0 использований — значит использована и удалена
+            used_invite = code
+            invite_info = f"`{code}`"
+            inviter_info = "неизвестно (одноразовая ссылка)"
+            break
 
     print(f"Старый кэш: {old_cache}")
     print(f"Новый кэш: {bot.invite_cache}")
